@@ -952,7 +952,7 @@ export default class VideoPlayer extends Component {
     return (
       <TouchableHighlight
         underlayColor="transparent"
-        activeOpacity={0.3}
+        activeOpacity={1}
         onPress={() => {
           this.resetControlTimeout();
           callback();
@@ -1176,11 +1176,15 @@ export default class VideoPlayer extends Component {
                 bottom: 100,}}>	
         <Image	
           style={{ 
-            alignSelf: 'center', marginStart: this.state.paused === true ? 2 : 0, tintColor: '#000' }}	
-          source={source} />	
+            alignSelf: 'center',
+            marginStart: this.state.paused === true ? 2 : 0,
+            tintColor: '#000',
+          }}
+          source={source}
+        />	
       </View>, 
-      this.methods.togglePlayPause,
-      styles.controls.playPause
+      this.events.onScreenTouch,
+      !this.props.audioOnly ? styles.controls.playPause : styles.controls.playPauseAudio
     );
   }
 
@@ -1412,7 +1416,8 @@ const styles = {
       resizeMode: "stretch",
     },
     control: {
-      padding: 16,
+      padding: 5,
+      paddingTop: 0,
     },
     text: {
       backgroundColor: "transparent",
@@ -1461,8 +1466,16 @@ const styles = {
     },
     playPause: {
       position: "relative",
-      width: 80,
+      width: '100%',
+      height: 220,
       zIndex: 0,
+    },
+    playPauseAudio: {
+      position: "relative",
+      width: '100%',
+      height: 200,
+      zIndex: 0,
+      marginBottom: 35,
     },
     title: {
       alignItems: "center",
@@ -1475,12 +1488,16 @@ const styles = {
     },
     timer: {
       width: 80,
+      position: 'absolute',
+      right: 0,
+      bottom: 0,
     },
     timerText: {
       backgroundColor: "transparent",
       color: "#FFF",
       fontSize: 11,
       textAlign: "right",
+      paddingRight: 5,
     },
   }),
   volume: StyleSheet.create({
@@ -1518,18 +1535,24 @@ const styles = {
       height: 28,
       marginLeft: 20,
       marginRight: 20,
+      position: "absolute",
+      bottom: 10,
+      left: 0,
+      right: 0,
     },
     track: {
       backgroundColor: "#333",
-      height: 1,
+      height: 2.5,
       position: "relative",
       top: 14,
       width: "100%",
+      borderRadius: 5
     },
     fill: {
       backgroundColor: "#FFF",
-      height: 1,
+      height: 2.5,
       width: "100%",
+      borderRadius: 5
     },
     handle: {
       position: "absolute",
